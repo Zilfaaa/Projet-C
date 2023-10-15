@@ -50,6 +50,21 @@ bool IPValide(const char *ip) {
 
 }
 
+void binaire(const char *ipp, char *fin) {
+    
+    for (int i = 0; i < strlen(ipp); i++) {
+        unsigned char c = ipp[i];
+
+        for (int j = 7; j >= 0; j--) {
+            int bit = (c >> j) & 1;
+            *fin = (char)('0' + bit); 
+            fin++; 
+        }
+    }
+    *fin = '\0'; 
+
+}
+
 int main(int argc, char *argv[]) {
 
     FILE* fic = NULL;
@@ -117,18 +132,11 @@ int main(int argc, char *argv[]) {
                     break;
 
         case 'c' : 
-                    char choix;
+                    //char choix;
                     printf("\na : Convertir en base 2\n");
                     printf("b : Convertir en base 16\n");
-                    scanf("%c",&choix);
-
-                    /* if (choix == "a"){
-
-                    }
-                    else if (choix == "b")
-                    {
-                        
-                    } */
+                    //scanf("%c",&choix);
+    
                     
                     break;
         default:
