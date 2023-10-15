@@ -50,20 +50,78 @@ bool IPValide(const char *ip) {
 
 }
 
-void binaire(const char *ipp, char *fin) {
-    
-    for (int i = 0; i < strlen(ipp); i++) {
-        unsigned char c = ipp[i];
+void binaire(const char *filename) {
+    FILE *file = fopen(filename, "r");
+    if (file == NULL) {
+        printf("probleme de fichier\n");
+        return;
+    }
 
-        for (int j = 7; j >= 0; j--) {
-            int bit = (c >> j) & 1;
-            *fin = (char)('0' + bit); 
-            fin++; 
+    char buffer[NMAX];
+
+    while (fgets(buffer, NMAX, file) != NULL) {
+        buffer[strcspn(buffer, "\n")] = '\0';  // Supprimer le caractère de nouvelle ligne
+        if (IPValide(buffer)) {
+            printf("Adresse IP : %s\n");
+
+            int segments[4];
+            sscanf(buffer, "%d.%d.%d.%d", &segments[0], &segments[1], &segments[2], &segments[3]);
+
+            printf("Adresse IP en binaire : ");
+            for (int i = 0; i < 4; i++) {
+                for (int j = 7; j >= 0; j--) {
+                    printf("%d", (segments[i] >> j) & 1);
+                }
+                if (i < 3) {
+                    printf(".");
+                }
+            }
+            printf("\n");
+        } else {
+            printf("L'adresse '%s'n'est pas valide.\n", buffer);
         }
     }
-    *fin = '\0'; 
 
+    fclose(file);
 }
+
+
+void hexa(const char *filename) {
+
+    FILE *file = fopen(filename, "r");
+    if (file == NULL) {
+        printf("Probleme de fichier\n");
+        return;
+    }
+
+    char buffer[NMAX];
+
+    while (fgets(buffer, NMAX, file) != NULL) {
+        buffer[strcspn(buffer, "\n")] = '\0';  // Supprimer le caractère de nouvelle ligne
+        if (IPValide(buffer)) {
+            printf("Adresse IP : %s\n");
+
+            int segments[4];
+            sscanf(buffer, "%d.%d.%d.%d", &segments[0], &segments[1], &segments[2], &segments[3]);
+
+            printf("Adresse en hexadécimal : ");
+            for (int i = 0; i < 4; i++) {
+                printf("%02X", segments[i]);
+                if (i < 3) {
+                    printf(".");
+                }
+            }
+            printf("\n");
+        } else {
+            printf("L'adresse '%s n'est pas valide.\n", buffer);
+        }
+    }
+
+    fclose(file);
+}
+
+
+
 
 int main(int argc, char *argv[]) {
 
@@ -132,10 +190,9 @@ int main(int argc, char *argv[]) {
                     break;
 
         case 'c' : 
-                    //char choix;
-                    printf("\na : Convertir en base 2\n");
-                    printf("b : Convertir en base 16\n");
-                    //scanf("%c",&choix);
+                    binaire("test.txt");
+                    hexa("test.txt");
+                    
     
                     
                     break;
