@@ -50,8 +50,8 @@ bool IPValide(const char *ip) {
 
 }
 
-void binaire(const char *filename) {
-    FILE *file = fopen(filename, "r");
+void binaire(const char *nomDuFichier) {
+    FILE *file = fopen(nomDuFichier, "r");
     if (file == NULL) {
         printf("probleme de fichier\n");
         return;
@@ -62,12 +62,11 @@ void binaire(const char *filename) {
     while (fgets(buffer, NMAX, file) != NULL) {
         buffer[strcspn(buffer, "\n")] = '\0';  // Supprimer le caractère de nouvelle ligne
         if (IPValide(buffer)) {
-            printf("Adresse IP : %s\n");
 
             int segments[4];
             sscanf(buffer, "%d.%d.%d.%d", &segments[0], &segments[1], &segments[2], &segments[3]);
 
-            printf("Adresse IP en binaire : ");
+            printf("Adresse en binaire : ");
             for (int i = 0; i < 4; i++) {
                 for (int j = 7; j >= 0; j--) {
                     printf("%d", (segments[i] >> j) & 1);
@@ -77,8 +76,7 @@ void binaire(const char *filename) {
                 }
             }
             printf("\n");
-        } else {
-            printf("L'adresse '%s'n'est pas valide.\n", buffer);
+        
         }
     }
 
@@ -86,9 +84,9 @@ void binaire(const char *filename) {
 }
 
 
-void hexa(const char *filename) {
+void hexa(const char *nomDuFichier) {
 
-    FILE *file = fopen(filename, "r");
+    FILE *file = fopen(nomDuFichier, "r");
     if (file == NULL) {
         printf("Probleme de fichier\n");
         return;
@@ -99,12 +97,11 @@ void hexa(const char *filename) {
     while (fgets(buffer, NMAX, file) != NULL) {
         buffer[strcspn(buffer, "\n")] = '\0';  // Supprimer le caractère de nouvelle ligne
         if (IPValide(buffer)) {
-            printf("Adresse IP : %s\n");
 
             int segments[4];
             sscanf(buffer, "%d.%d.%d.%d", &segments[0], &segments[1], &segments[2], &segments[3]);
 
-            printf("Adresse en hexadécimal : ");
+            printf("Adresse en hexadecimal : ");
             for (int i = 0; i < 4; i++) {
                 printf("%02X", segments[i]);
                 if (i < 3) {
@@ -112,8 +109,24 @@ void hexa(const char *filename) {
                 }
             }
             printf("\n");
-        } else {
-            printf("L'adresse '%s n'est pas valide.\n", buffer);
+        }
+    }
+
+    fclose(file);
+}
+
+void adressesIP(const char *filename) {
+    FILE *file = fopen(filename, "r");
+    if (file == NULL) {
+        printf("Probleme avec le fichier\n");
+        return;
+    }
+    char buffer[NMAX];
+
+    while (fgets(buffer, NMAX, file) != NULL) {
+        buffer[strcspn(buffer, "\n")] = '\0';
+        if (IPValide(buffer)) {
+            printf("Adresse IP : %s\n", buffer);
         }
     }
 
@@ -190,6 +203,7 @@ int main(int argc, char *argv[]) {
                     break;
 
         case 'c' : 
+                    adressesIP("test.txt");
                     binaire("test.txt");
                     hexa("test.txt");
                     
