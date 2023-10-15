@@ -50,21 +50,120 @@ bool IPValide(const char *ip) {
 
 }
 
+void binaire(const char *nomDuFichier) {
+    FILE *file = fopen(nomDuFichier, "r");
+    if (file == NULL) {
+        printf("probleme de fichier\n");
+        return;
+    }
 
-char fournirInfo() {
-    int ip;
-    int masque;
+    char buffer[NMAX];
 
-    
+    while (fgets(buffer, NMAX, file) != NULL) {
+        buffer[strcspn(buffer, "\n")] = '\0';  // Supprimer le caractère de nouvelle ligne
+        if (IPValide(buffer)) {
 
-    printf("veuillez entrer une adresse ip :");
-    scanf("%d", &ip);
+            int segments[4];
+            sscanf(buffer, "%d.%d.%d.%d", &segments[0], &segments[1], &segments[2], &segments[3]);
 
-    printf("veuillez entrer un masque :");
-    scanf("%d", &masque);
+            printf("Adresse en binaire : ");
+            for (int i = 0; i < 4; i++) {
+                for (int j = 7; j >= 0; j--) {
+                    printf("%d", (segments[i] >> j) & 1);
+                }
+                if (i < 3) {
+                    printf(".");
+                }
+            }
+            printf("\n");
+        
+        }
+    }
 
-    return 0;
+    fclose(file);
 }
+
+
+void hexa(const char *nomDuFichier) {
+
+    FILE *file = fopen(nomDuFichier, "r");
+    if (file == NULL) {
+        printf("Probleme de fichier\n");
+        return;
+    }
+
+    char buffer[NMAX];
+
+    while (fgets(buffer, NMAX, file) != NULL) {
+        buffer[strcspn(buffer, "\n")] = '\0';  // Supprimer le caractère de nouvelle ligne
+        if (IPValide(buffer)) {
+
+            int segments[4];
+            sscanf(buffer, "%d.%d.%d.%d", &segments[0], &segments[1], &segments[2], &segments[3]);
+
+            printf("Adresse en hexadecimal : ");
+            for (int i = 0; i < 4; i++) {
+                printf("%02X", segments[i]);
+                if (i < 3) {
+                    printf(".");
+                }
+            }
+            printf("\n");
+        }
+    }
+
+    fclose(file);
+}
+
+void adressesIP(const char *filename) {
+    FILE *file = fopen(filename, "r");
+    if (file == NULL) {
+        printf("Probleme avec le fichier\n");
+        return;
+    }
+    char buffer[NMAX];
+
+    while (fgets(buffer, NMAX, file) != NULL) {
+        buffer[strcspn(buffer, "\n")] = '\0';
+        if (IPValide(buffer)) {
+            printf("Adresse IP : %s\n", buffer);
+        }
+    }
+
+    fclose(file);
+}
+
+
+int fournirInfo() {
+    char ip[12];
+    char masque[12];
+
+    char ip1[] = "192.168.0.1";
+    char msq1[] = "255.255.255.0";
+    char ip2[] = "192.168.0.3";
+    char msq2[] = "255.255.255.0";
+    char ip3[] = "192.168.10.1";
+    char msq3[] = "255.255.255.128";
+    char ip4[] = "192.168.10.2";
+    char msq4[] = "255.255.255.128";
+
+    printf("Veuillez entrer une adresse IP : ");
+    scanf("%s", ip);
+    
+    printf("Veuillez entrer un masque : ");
+    scanf("%s", masque);
+
+    if (strcmp(masque, msq1) == 0 || strcmp(masque, msq2) == 0) {
+        printf("Adresses correspondantes : %s, %s\n", ip1, ip2);
+    } 
+    else if (strcmp(masque, msq3) == 0 || strcmp(masque, msq4) == 0) {
+        printf("Adresses correspondantes : %s, %s\n", ip3, ip4);
+    } else {
+        printf("Adresses non correspondantes :\n");
+    }
+}
+
+
 
 
 int main(int argc, char *argv[]) {
@@ -134,11 +233,17 @@ int main(int argc, char *argv[]) {
                     break;
 
         case 'c' : 
+                    adressesIP("test.txt");
+                    binaire("test.txt");
+                    hexa("test.txt");
+                    
+    
+                    
                     break;
-
         case 'd' :
         
-         int info = fournirInfo();
+        int info = fournirInfo();
+        printf("%d", info);
 
                     break;
         default:
@@ -152,5 +257,3 @@ int main(int argc, char *argv[]) {
     return 0;
 
 }
-
-
