@@ -29,34 +29,6 @@ char * SaisieIP(){
 
 }
 
-/*typedef struct IP{
-    char * IP;
-}IP;
-
-typedef IP IPs[NMAX];
-
-
-void SaisieIP(IP * ip){
-    char buffer[NMAX];
-    printf("IP : ");
-    fgets(buffer,NMAX-1,stdin);
-    ip->IP = (char *)calloc(strlen(buffer)+1, sizeof(char));
-    strcpy(ip->IP,buffer);
-    if (!ip->IP){
-		printf("Erreur d'allocation !\n");
-		exit(0);
-	}
-}
-
-void SaisieIPs(IPs ips){
-    int i; 
-    for (i=0;i<NMAX;i++){
-        printf("Saisie IP %d",i+1);
-        SaisieIP(&(ips[i]));
-    }
-}*/
-
-
 bool IPValide(const char *ip) {
 
     int segments[4];
@@ -78,6 +50,23 @@ bool IPValide(const char *ip) {
 
 }
 
+
+char fournirInfo() {
+    int ip;
+    int masque;
+
+    
+
+    printf("veuillez entrer une adresse ip :");
+    scanf("%d", &ip);
+
+    printf("veuillez entrer un masque :");
+    scanf("%d", &masque);
+
+    return 0;
+}
+
+
 int main(int argc, char *argv[]) {
 
     FILE* fic = NULL;
@@ -91,45 +80,69 @@ int main(int argc, char *argv[]) {
     if (fic != NULL) {
 
         int nbIPs;
+        char m;
 
-        printf("Combien d'adresses IP voulez-vous saisir ? ");
-        scanf("%d", &nbIPs);
-        getchar();
+        printf("*****MENU*****\n");
+        printf("a : Saisie IP\n");
+        printf("b : Affichage IP\n");
+        printf("c : Convertir IP\n");
+        printf("d : Recherche IP masque\n");
+        printf("e : Quitter\n");
 
-        for (int i = 0; i < nbIPs && compteurIP < NMAX; i++) {
+        printf("Choix : ");
+        scanf("%c",&m);
+        switch (m)
 
-            IP = SaisieIP();
+        {
+        case 'a' :  
+                    printf("Combien d'adresses IP voulez-vous saisir ? ");
+                    scanf("%d", &nbIPs);
+                    getchar();
 
-            if (IPValide(IP)) {
-                fprintf(fic, "%s\n", IP);
-                TABips[compteurIP] = strdup(IP);
-                compteurIP++;
+                    for (int i = 0; i < nbIPs && compteurIP < NMAX; i++) {
 
-            } else {
-                printf("L'adresse IP saisie n'est pas valide.\n");
-            }
+                    IP = SaisieIP();
+
+                    if (IPValide(IP)) {
+                        fprintf(fic, "%s\n", IP);
+                        TABips[compteurIP] = strdup(IP);
+                        compteurIP++;
+
+                    } else {
+                        printf("L'adresse IP saisie n'est pas valide.\n");
+                    }
         }
 
-        fclose(fic);
+                    fclose(fic);
+                    break;
+        
+        case 'b' : 
+                    printf("Adresses IP sauvegardées :\n");
+                    fic = fopen("test.txt", "r");
 
-        /*printf("Voici les adresses IP valides saisies :\n");
-        for (int i = 0; i < compteurIP; i++) {
-            printf("%s\n", TABips[i]);
-        }*/
-
-        printf("Adresses IP sauvegardées :\n");
-
-        fic = fopen("test.txt", "r");
-
-        if (fic != NULL) {
-            char buffer[NMAX];
-            while (fgets(buffer, NMAX, fic) != NULL) {
-                printf("%s", buffer);
-            }
-            fclose(fic);
+                    if (fic != NULL) {
             
-        } else {
-            printf("Impossible d'ouvrir le fichier pour la lecture.\n");
+                        char buffer[NMAX];
+                        while (fgets(buffer, NMAX, fic) != NULL) {
+                        printf("%s", buffer);
+                     }
+                    fclose(fic);
+            
+                    } else {
+                        printf("Impossible d'ouvrir le fichier pour la lecture.\n");
+                    }
+                    break;
+
+        case 'c' : 
+                    break;
+
+        case 'd' :
+        
+         int info = fournirInfo();
+
+                    break;
+        default:
+            break;
         }
 
     } else {
@@ -139,3 +152,5 @@ int main(int argc, char *argv[]) {
     return 0;
 
 }
+
+
